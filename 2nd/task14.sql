@@ -1,4 +1,7 @@
 -- Изменение параметра datestyle на 'Postgres, DMY'
+
+-- /var/lib/postgres/data
+
 SET datestyle TO 'Postgres, DMY';
 
 -- Проверка нового значения datestyle
