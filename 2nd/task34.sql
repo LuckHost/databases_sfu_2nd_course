@@ -1,3 +1,11 @@
+DROP TABLE pilot_hobbies IF EXISTS
+
+-- Создание таблицы pilot_hobbies
+CREATE TABLE pilot_hobbies (
+    pilot_name text PRIMARY KEY,
+    hobbies jsonb
+);
+
 -- Обновление значения по ключу home_lib для конкретного пилота
 UPDATE pilot_hobbies
 SET hobbies = jsonb_set(
