@@ -1,14 +1,18 @@
--- Изменение параметра datestyle в конфигурационном файле
--- (этот шаг выполняется вручную в файле postgresql.conf)
+-- Изменение параметра datestyle на 'SQL, YMD'
+SET datestyle TO 'SQL, YMD';
 
--- Пример проверки нового значения datestyle после перезапуска сервера
+-- Проверка нового значения datestyle
 SHOW datestyle;
 
--- Пример ввода даты в новом формате
-SELECT '05-18-2016'::timestamp;
+-- Пример ввода и вывода даты с новым форматом
+SELECT '2016-05-18'::date;
+SELECT '18-05-2016'::date; -- Ошибка
 
--- Пример использования current_timestamp
-SELECT current_timestamp;
+-- Пример ввода и вывода timestamp с новым форматом
+SELECT '2016-05-18 14:30:00'::timestamp;
+SELECT '18-05-2016 14:30:00'::timestamp; -- Ошибка
 
--- Пример ввода недопустимой даты
-SELECT 'Feb 29, 2015'::date; -- Ошибка
+-- Возвращаем datestyle к значению по умолчанию
+SET datestyle TO DEFAULT;
+
+
