@@ -1,5 +1,7 @@
 -- Изменение параметра datestyle на 'Postgres, DMY'
---  /usr/local/pgsql/data
+
+-- /var/lib/postgres/data
+
 SET datestyle TO 'Postgres, DMY';
 
 -- Проверка нового значения datestyle
