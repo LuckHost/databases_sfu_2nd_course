@@ -1,39 +1,39 @@
 -- Удаляем таблицу, если она уже существует
-DROP TABLE IF EXISTS students;
+DROP TABLE IF EXISTS progress;
 
--- Создаем таблицу students
-CREATE TABLE students (
-    record_book NUMERIC(5) NOT NULL UNIQUE,  -- Уникальный номер зачетной книжки
-    name TEXT NOT NULL CHECK (name <> ''),   -- Имя студента (не пустая строка)
-    doc_ser CHAR(4) NOT NULL,               -- Серия документа (4 символа, включая лидирующие нули)
-    doc_num NUMERIC(6) NOT NULL,            -- Номер документа (6 цифр)
-    who_adds_row TEXT DEFAULT current_user,  -- Пользователь, добавивший запись
-    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Время добавления записи
-    PRIMARY KEY (doc_ser, doc_num)          -- Составной первичный ключ
+-- Создаем таблицу progress
+CREATE TABLE progress (
+    id SERIAL PRIMARY KEY,  -- Уникальный идентификатор записи
+    doc_ser CHAR(4) NOT NULL,  -- Серия документа студента (внешний ключ)
+    doc_num NUMERIC(6) NOT NULL,  -- Номер документа студента (внешний ключ)
+    subject TEXT NOT NULL,  -- Название учебной дисциплины
+    acad_year TEXT NOT NULL,  -- Учебный год (например, '2023/2024')
+    term NUMERIC(1) NOT NULL CHECK (term IN (1, 2)),  -- Семестр (1 или 2)
+    mark NUMERIC(1) NOT NULL CHECK (mark >= 3 AND mark <= 5),  -- Оценка (от 3 до 5)
+    FOREIGN KEY (doc_ser, doc_num) REFERENCES students (doc_ser, doc_num)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
 
 -- Комментарии к таблице и столбцам
-COMMENT ON TABLE students IS 'Таблица для хранения данных о студентах';
-COMMENT ON COLUMN students.record_book IS 'Уникальный номер зачетной книжки';
-COMMENT ON COLUMN students.name IS 'ФИО студента';
-COMMENT ON COLUMN students.doc_ser IS 'Серия документа, удостоверяющего личность';
-COMMENT ON COLUMN students.doc_num IS 'Номер документа, удостоверяющего личность';
-COMMENT ON COLUMN students.who_adds_row IS 'Пользователь, добавивший запись';
-COMMENT ON COLUMN students.added_at IS 'Время добавления записи';
+COMMENT ON TABLE progress IS 'Таблица для хранения данных об успеваемости студентов';
+COMMENT ON COLUMN progress.id IS 'Уникальный идентификатор записи';
+COMMENT ON COLUMN progress.doc_ser IS 'Серия документа студента (внешний ключ)';
+COMMENT ON COLUMN progress.doc_num IS 'Номер документа студента (внешний ключ)';
+COMMENT ON COLUMN progress.subject IS 'Название учебной дисциплины';
+COMMENT ON COLUMN progress.acad_year IS 'Учебный год';
+COMMENT ON COLUMN progress.term IS 'Семестр (1 или 2)';
+COMMENT ON COLUMN progress.mark IS 'Оценка (от 3 до 5)';
+COMMENT ON COLUMN progress.test_form IS 'Форма проверки знаний (экзамен или зачет)';
 
 -- Вставляем тестовые данные
-INSERT INTO students (record_book, name, doc_ser, doc_num)
+INSERT INTO progress (doc_ser, doc_num, subject, acad_year, term, mark, test_form)
 VALUES 
-    (12345, 'Иванов Иван Иванович', '0402', 123456),
-    (12346, 'Петров Петр Петрович', '0403', 654321),
-    (12347, 'Сидоров Алексей Владимирович', '0404', 112233),
-    (12348, 'Козлова Анна Сергеевна', '0405', 445566),
-    (12349, 'Михайлов Дмитрий Андреевич', '0406', 778899),
-    (12350, 'Новикова Екатерина Павловна', '0407', 990011),
-    (12351, 'Федоров Артем Игоревич', '0408', 223344),
-    (12352, 'Смирнова Ольга Дмитриевна', '0409', 556677),
-    (12353, 'Кузнецов Владислав Александрович', '0410', 889900),
-    (12354, 'Васильева Марина Викторовна', '0411', 334455);
+    ('0402', 123456, 'Математика', '2023/2024', 1, 5, 'экзамен'),
+    ('0403', 654321, 'Физика', '2023/2024', 1, 4, 'экзамен'),
+    ('0404', 112233, 'Химия', '2023/2024', 1, 3, 'зачет'),
+    ('0405', 445566, 'Информатика', '2023/2024', 2, 5, 'экзамен'),
+    ('0406', 778899, 'История', '2023/2024', 2, 4, 'зачет');
 
 -- Проверяем данные
-SELECT * FROM students;
+SELECT * FROM progress;
