@@ -1,4 +1,4 @@
-DROP TABLE pilot_hobbies IF EXISTS
+DROP TABLE IF EXISTS pilot_hobbies;
 
 -- Создание таблицы pilot_hobbies
 CREATE TABLE pilot_hobbies (
