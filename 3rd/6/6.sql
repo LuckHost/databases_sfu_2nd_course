@@ -1,33 +1,26 @@
--- Модифицируем таблицу students
-ALTER TABLE students
-DROP CONSTRAINT students_pkey;  -- Удаляем старый первичный ключ
+-- Удаление таблиц, если они существуют
+DROP TABLE IF EXISTS progress;
+DROP TABLE IF EXISTS students;
 
-ALTER TABLE students
-ADD PRIMARY KEY (doc_ser, doc_num);  -- Добавляем новый составной первичный ключ
+-- Создание таблицы students с составным первичным ключом
+CREATE TABLE students (
+    record_book numeric(5) NOT NULL UNIQUE,
+    name text NOT NULL,
+    doc_ser numeric(4),
+    doc_num numeric(6),
+    PRIMARY KEY (doc_ser, doc_num)
+);
 
--- Модифицируем таблицу progress
-ALTER TABLE progress
-DROP CONSTRAINT progress_doc_ser_fkey;  -- Удаляем старый внешний ключ
-
-ALTER TABLE progress
-ADD FOREIGN KEY (doc_ser, doc_num)
-REFERENCES students (doc_ser, doc_num)
-ON DELETE CASCADE
-ON UPDATE CASCADE;  -- Добавляем новый составной внешний ключ
-
--- Проверяем работу составных ключей
--- Вставляем данные в students
-INSERT INTO students (record_book, name, doc_ser, doc_num)
-VALUES (12300, 'Иванов Иван Иванович', 0402, 543281);
-
--- Вставляем данные в progress
-INSERT INTO progress (doc_ser, doc_num, subject, acad_year, term, mark)
-VALUES (0402, 543281, 'Физика', '2016/2017', 1, 5);
-
--- Проверяем каскадное обновление
-UPDATE students
-SET doc_ser = 0403
-WHERE doc_ser = 0402 AND doc_num = 543281;
-
--- Проверяем, что данные в progress обновились
-SELECT * FROM progress WHERE doc_ser = 0403 AND doc_num = 543281;
+-- Создание таблицы progress с измененным внешним ключом
+CREATE TABLE progress (
+    doc_ser numeric(4),
+    doc_num numeric(6),
+    subject text NOT NULL,
+    acad_year text NOT NULL,
+    term numeric(1) NOT NULL CHECK (term = 1 OR term = 2),
+    mark numeric(1) NOT NULL CHECK (mark >= 3 AND mark <= 5) DEFAULT 5,
+    FOREIGN KEY (doc_ser, doc_num)
+        REFERENCES students (doc_ser, doc_num)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);

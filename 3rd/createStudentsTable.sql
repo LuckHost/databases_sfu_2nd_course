@@ -3,11 +3,13 @@ DROP TABLE IF EXISTS students;
 
 -- Создаем таблицу students
 CREATE TABLE students (
-    record_book NUMERIC(5) NOT NULL UNIQUE,  -- Уникальный номер зачетной книжки
+    record_book NUMERIC(5) NOT NULL,  -- Уникальный номер зачетной книжки
     name TEXT NOT NULL,                      -- ФИО студента
-    doc_ser CHAR(4) NOT NULL,                -- Серия документа (4 символа, включая лидирующие нули)
-    doc_num NUMERIC(6) NOT NULL,             -- Номер документа (6 цифр)
-    PRIMARY KEY (doc_ser, doc_num)           -- Составной первичный ключ
+    doc_ser NUMERIC(4),                -- Серия документа (4 символа, включая лидирующие нули)
+    doc_num NUMERIC(6),             -- Номер документа (6 цифр)
+    who_adds_row TEXT DEFAULT current_user, -- добавленный столбец
+    added_at timestamp DEFAULT current_timestamp, -- Добавленный столбец для времени
+    PRIMARY KEY (record_book)           -- Составной первичный ключ
 );
 
 -- Вставляем тестовые данные

@@ -1,31 +1,30 @@
--- Создаем таблицу subjects
+-- Создание таблицы subjects
 CREATE TABLE subjects (
-    subject_id SERIAL PRIMARY KEY,
-    subject TEXT NOT NULL UNIQUE
+    subject_id integer PRIMARY KEY,
+    subject text UNIQUE
 );
 
--- Вставляем данные в subjects
-INSERT INTO subjects (subject)
-VALUES ('Физика'), ('Математика'), ('Химия');
+-- Вставка данных в таблицу subjects
+INSERT INTO subjects (subject_id, subject)
+VALUES
+    (1, 'Математика'),
+    (2, 'Физика'),
+    (3, 'Химия');
 
--- Модифицируем таблицу progress
+-- Модификация таблицы progress
 ALTER TABLE progress
-ADD COLUMN subject_id INT;
+ADD COLUMN subject_id integer;
 
--- Обновляем существующие данные в progress
+-- Обновление данных в таблице progress
 UPDATE progress
 SET subject_id = subjects.subject_id
 FROM subjects
 WHERE progress.subject = subjects.subject;
 
--- Удаляем старый столбец subject
+-- Удаление старого столбца subject
 ALTER TABLE progress
 DROP COLUMN subject;
 
--- Добавляем внешний ключ на subjects
+-- Добавление внешнего ключа на subject_id
 ALTER TABLE progress
-ADD FOREIGN KEY (subject_id) REFERENCES subjects (subject_id);
-
--- Проверяем вставку новых данных
-INSERT INTO progress (doc_ser, doc_num, subject_id, acad_year, term, mark)
-VALUES (0403, 543281, 1, '2016/2017', 1, 5);  -- subject_id = 1 соответствует 'Физика'
+ADD FOREIGN KEY (subject_id) REFERENCES subjects(subject_id);
