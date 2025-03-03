@@ -1,10 +1,18 @@
--- Модифицируем тип данных для doc_ser
-ALTER TABLE students
-ALTER COLUMN doc_ser TYPE CHAR(4);
+-- Удаление внешнего ключа в таблице progress
+ALTER TABLE progress
+DROP CONSTRAINT progress_doc_ser_doc_num_fkey;
 
--- Проверяем вставку данных с лидирующими нулями
-INSERT INTO students (record_book, name, doc_ser, doc_num)
-VALUES (12302, 'Петров Петр Петрович', '0402', 123456);
+-- Изменение типа данных столбца doc_ser в таблице progress
+ALTER TABLE progress
+ALTER COLUMN doc_ser TYPE character(4);
 
--- Проверяем, что данные сохранились корректно
-SELECT * FROM students WHERE doc_ser = '0402';
+-- Восстановление внешнего ключа
+ALTER TABLE progress
+ADD FOREIGN KEY (doc_ser, doc_num)
+REFERENCES students (doc_ser, doc_num)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
+
+-- Проверка данных
+SELECT * FROM students;
+SELECT * FROM progress;
