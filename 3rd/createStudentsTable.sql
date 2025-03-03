@@ -1,4 +1,5 @@
--- Удаляем таблицу, если она уже существует
+-- Удаление таблиц, если они существуют
+DROP TABLE IF EXISTS progress;
 DROP TABLE IF EXISTS students;
 
 -- Создаем таблицу students

@@ -1,3 +1,8 @@
+-- Удаление таблиц, если они существуют
+DROP TABLE IF EXISTS progress;
+DROP TABLE IF EXISTS students;
+
+
 -- Удаляем таблицу, если она уже существует
 DROP TABLE IF EXISTS progress;
 
