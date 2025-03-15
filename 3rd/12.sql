@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS airports CASCADE;
+
 -- Создание таблиц
 CREATE TABLE Airports (
     airport_code CHAR(3) PRIMARY KEY,
