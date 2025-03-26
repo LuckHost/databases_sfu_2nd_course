@@ -1,22 +1,5 @@
 SELECT 
-    dw.name_of_day, 
-    COUNT(*) AS num_flights
-FROM 
-    routes,
-    unnest(days_of_week) WITH ORDINALITY AS r(day_num, ordinality)
-    JOIN unnest('{ "Пн.", "Вт.", "Ср.", "Чт.", "Пт.", "Сб.", "Вс."}'::text[]) 
-         WITH ORDINALITY AS dw(name_of_day, ordinality)
-    ON r.ordinality = dw.ordinality
-WHERE 
-    departure_city = 'Москва'
-GROUP BY 
-    dw.name_of_day, dw.ordinality
-ORDER BY 
-    dw.ordinality;
-
--- Альтернативный вариант с CASE выражением
-SELECT 
-    CASE unnest(days_of_week)
+    CASE day_num
         WHEN 1 THEN 'Пн.'
         WHEN 2 THEN 'Вт.'
         WHEN 3 THEN 'Ср.'
@@ -26,11 +9,12 @@ SELECT
         WHEN 7 THEN 'Вс.'
     END AS name_of_day,
     COUNT(*) AS num_flights
-FROM 
-    routes
-WHERE 
-    departure_city = 'Москва'
+FROM (
+    SELECT unnest(days_of_week) AS day_num
+    FROM routes
+    WHERE departure_city = 'Москва'
+) AS days
 GROUP BY 
-    name_of_day
+    name_of_day, day_num
 ORDER BY 
-    MIN(unnest(days_of_week));
+    day_num;
