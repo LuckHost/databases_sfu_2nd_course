@@ -1,0 +1,258 @@
+[luckhost@archlinux 3rd]$ psql -U postgres -f allScripts.sql
+DROP TABLE
+DROP TABLE
+CREATE TABLE
+INSERT 0 2
+psql:allScripts.sql:24: NOTICE:  table "progress" does not exist, skipping
+DROP TABLE
+DROP TABLE
+psql:allScripts.sql:29: NOTICE:  table "progress" does not exist, skipping
+DROP TABLE
+CREATE TABLE
+ALTER TABLE
+ALTER TABLE
+INSERT 0 1
+INSERT 0 1
+psql:allScripts.sql:63: ERROR:  new row for relation "progress" violates check constraint "progress_check"
+DETAIL:  Failing row contains (12302, Химия, 2016/2017, 1, 2, экзамен).
+psql:allScripts.sql:66: ERROR:  new row for relation "progress" violates check constraint "progress_check"
+DETAIL:  Failing row contains (12303, Биология, 2016/2017, 1, 5, зачет).
+ALTER TABLE
+psql:allScripts.sql:75: ERROR:  new row for relation "progress" violates check constraint "progress_check"
+DETAIL:  Failing row contains (12300, Физика, 2016/2017, 1, 6, экзамен).
+ALTER TABLE
+INSERT 0 1
+DROP TABLE
+psql:allScripts.sql:88: NOTICE:  table "students" does not exist, skipping
+DROP TABLE
+CREATE TABLE
+CREATE TABLE
+INSERT 0 3
+INSERT 0 3
+psql:allScripts.sql:131: ERROR:  insert or update on table "progress" violates foreign key constraint "progress_doc_ser_doc_num_fkey"
+DETAIL:  Key (doc_ser, doc_num)=(405, 543284) is not present in table "students".
+psql:allScripts.sql:136: ERROR:  duplicate key value violates unique constraint "students_pkey"
+DETAIL:  Key (doc_ser, doc_num)=(402, 543281) already exists.
+ record_book |          name           | doc_ser | doc_num
+-------------+-------------------------+---------+---------
+       12300 | Иванов Иван Иванович    |     402 |  543281
+       12301 | Петров Петр Петрович    |     403 |  543282
+       12302 | Сидоров Сидор Сидорович |     404 |  543283
+(3 rows)
+
+ doc_ser | doc_num |  subject   | acad_year | term | mark
+---------+---------+------------+-----------+------+------
+     402 |  543281 | Математика | 2023/2024 |    1 |    5
+     403 |  543282 | Физика     | 2023/2024 |    1 |    4
+     404 |  543283 | Химия      | 2023/2024 |    2 |    3
+(3 rows)
+
+psql:allScripts.sql:148: ERROR:  relation "subjects" already exists
+psql:allScripts.sql:155: ERROR:  duplicate key value violates unique constraint "subjects_pkey"
+DETAIL:  Key (subject_id)=(1) already exists.
+ALTER TABLE
+UPDATE 3
+ALTER TABLE
+ALTER TABLE
+INSERT 0 3
+ record_book |          name           | doc_ser | doc_num
+-------------+-------------------------+---------+---------
+       12300 | Иванов Иван Иванович    |     402 |  543281
+       12301 | Петров Петр Петрович    |     403 |  543282
+       12302 | Сидоров Сидор Сидорович |     404 |  543283
+(3 rows)
+
+ subject_id |   subject
+------------+-------------
+          1 | Математика
+          2 | Физика
+          3 | Химия
+          9 | Информатика
+(4 rows)
+
+ doc_ser | doc_num | acad_year | term | mark | subject_id
+---------+---------+-----------+------+------+------------
+     402 |  543281 | 2023/2024 |    1 |    5 |          1
+     403 |  543282 | 2023/2024 |    1 |    4 |          2
+     404 |  543283 | 2023/2024 |    2 |    3 |          3
+     402 |  543281 | 2023/2024 |    1 |    5 |          1
+     403 |  543282 | 2023/2024 |    1 |    4 |          2
+     404 |  543283 | 2023/2024 |    2 |    3 |          3
+(6 rows)
+
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ record_book |          name           | doc_ser | doc_num
+-------------+-------------------------+---------+---------
+       12300 | Иванов Иван Иванович    | 402     |  543281
+       12301 | Петров Петр Петрович    | 403     |  543282
+       12302 | Сидоров Сидор Сидорович | 404     |  543283
+(3 rows)
+
+ doc_ser | doc_num | acad_year | term | mark | subject_id
+---------+---------+-----------+------+------+------------
+ 402     |  543281 | 2023/2024 |    1 |    5 |          1
+ 403     |  543282 | 2023/2024 |    1 |    4 |          2
+ 404     |  543283 | 2023/2024 |    2 |    3 |          3
+ 402     |  543281 | 2023/2024 |    1 |    5 |          1
+ 403     |  543282 | 2023/2024 |    1 |    4 |          2
+ 404     |  543283 | 2023/2024 |    2 |    3 |          3
+(6 rows)
+
+psql:allScripts.sql:214: NOTICE:  drop cascades to materialized view moscowairports
+DROP TABLE
+CREATE TABLE
+psql:allScripts.sql:237: ERROR:  relation "flights" already exists
+   conname    | conrelid | confrelid
+--------------+----------+-----------
+ flights_pkey | flights  | -
+(1 row)
+
+ALTER TABLE
+   conname    |  conrelid  | confrelid
+--------------+------------+-----------
+ flights_pkey | flightsnew | -
+(1 row)
+
+psql:allScripts.sql:254: NOTICE:  view "moscowairports" does not exist, skipping
+DROP VIEW
+psql:allScripts.sql:255: NOTICE:  materialized view "moscowairports" does not exist, skipping
+DROP MATERIALIZED VIEW
+psql:allScripts.sql:259: NOTICE:  table "flights" does not exist, skipping
+DROP TABLE
+DROP TABLE
+DROP TABLE
+CREATE TABLE
+INSERT 0 3
+CREATE VIEW
+ airport_code | airport_name |  city  | longitude | latitude  |   timezone
+--------------+--------------+--------+-----------+-----------+---------------
+ SVO          | Sheremetyevo | Moscow | 37.414722 | 55.972778 | Europe/Moscow
+(1 row)
+
+INSERT 0 1
+ airport_code | airport_name |  city  | longitude | latitude  |   timezone
+--------------+--------------+--------+-----------+-----------+---------------
+ SVO          | Sheremetyevo | Moscow | 37.414722 | 55.972778 | Europe/Moscow
+ DME          | Domodedovo   | Moscow | 37.906111 | 55.408611 | Europe/Moscow
+(2 rows)
+
+UPDATE 1
+ airport_code |        airport_name        |  city  | longitude | latitude  |   timezone
+--------------+----------------------------+--------+-----------+-----------+---------------
+ DME          | Domodedovo                 | Moscow | 37.906111 | 55.408611 | Europe/Moscow
+ SVO          | Sheremetyevo International | Moscow | 37.414722 | 55.972778 | Europe/Moscow
+(2 rows)
+
+DELETE 1
+ airport_code |        airport_name        |  city  | longitude | latitude  |   timezone
+--------------+----------------------------+--------+-----------+-----------+---------------
+ SVO          | Sheremetyevo International | Moscow | 37.414722 | 55.972778 | Europe/Moscow
+(1 row)
+
+ airport_code |        airport_name        |       city       | longitude  | latitude  |     timezone
+--------------+----------------------------+------------------+------------+-----------+------------------
+ LED          | Pulkovo                    | Saint Petersburg |    30.2625 | 59.800278 | Europe/Moscow
+ JFK          | John F. Kennedy            | New York         | -73.778889 | 40.639722 | America/New_York
+ SVO          | Sheremetyevo International | Moscow           |  37.414722 | 55.972778 | Europe/Moscow
+(3 rows)
+
+DROP VIEW
+psql:allScripts.sql:317: NOTICE:  materialized view "moscowairports" does not exist, skipping
+DROP MATERIALIZED VIEW
+psql:allScripts.sql:320: NOTICE:  table "flights" does not exist, skipping
+DROP TABLE
+psql:allScripts.sql:321: NOTICE:  table "flightsnew" does not exist, skipping
+DROP TABLE
+DROP TABLE
+CREATE TABLE
+INSERT 0 3
+SELECT 1
+ airport_code | airport_name |  city  | longitude | latitude  |   timezone
+--------------+--------------+--------+-----------+-----------+---------------
+ SVO          | Sheremetyevo | Moscow | 37.414722 | 55.972778 | Europe/Moscow
+(1 row)
+
+INSERT 0 1
+ airport_code | airport_name |  city  | longitude | latitude  |   timezone
+--------------+--------------+--------+-----------+-----------+---------------
+ SVO          | Sheremetyevo | Moscow | 37.414722 | 55.972778 | Europe/Moscow
+(1 row)
+
+REFRESH MATERIALIZED VIEW
+ airport_code | airport_name |  city  | longitude | latitude  |   timezone
+--------------+--------------+--------+-----------+-----------+---------------
+ SVO          | Sheremetyevo | Moscow | 37.414722 | 55.972778 | Europe/Moscow
+ DME          | Domodedovo   | Moscow | 37.906111 | 55.408611 | Europe/Moscow
+(2 rows)
+
+DROP TABLE
+psql:allScripts.sql:366: NOTICE:  drop cascades to materialized view moscowairports
+DROP TABLE
+psql:allScripts.sql:367: NOTICE:  table "tickets" does not exist, skipping
+DROP TABLE
+psql:allScripts.sql:368: NOTICE:  table "ticket_flights" does not exist, skipping
+DROP TABLE
+psql:allScripts.sql:369: NOTICE:  table "flights" does not exist, skipping
+DROP TABLE
+psql:allScripts.sql:370: NOTICE:  table "aircrafts" does not exist, skipping
+DROP TABLE
+DROP TABLE
+DROP TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+psql:allScripts.sql:409: ERROR:  relation "flights" does not exist
+psql:allScripts.sql:423: ERROR:  relation "aircrafts" does not exist
+CREATE TABLE
+psql:allScripts.sql:439: ERROR:  relation "flights" does not exist
+CREATE TABLE
+psql:allScripts.sql:452: ERROR:  relation "flights" does not exist
+ALTER TABLE
+ALTER TABLE
+psql:allScripts.sql:461: ERROR:  relation "boarding_passes" does not exist
+ALTER TABLE
+INSERT 0 1
+INSERT 0 1
+psql:allScripts.sql:478: ERROR:  relation "flights" does not exist
+LINE 1: INSERT INTO flights (flight_no, scheduled_departure, schedul...
+                    ^
+INSERT 0 1
+psql:allScripts.sql:486: ERROR:  relation "ticket_flights" does not exist
+LINE 1: INSERT INTO ticket_flights (ticket_no, flight_id, fare_condi...
+                    ^
+psql:allScripts.sql:490: ERROR:  relation "boarding_passes" does not exist
+LINE 1: INSERT INTO boarding_passes (ticket_no, flight_id, boarding_...
+                    ^
+psql:allScripts.sql:494: ERROR:  insert or update on table "seats" violates foreign key constraint "seats_aircraft_code_fkey"
+DETAIL:  Key (aircraft_code)=(320) is not present in table "aircrafts".
+psql:allScripts.sql:504: ERROR:  relation "flights" does not exist
+LINE 1: UPDATE flights
+               ^
+UPDATE 1
+UPDATE 1
+psql:allScripts.sql:529: ERROR:  relation "boarding_passes" does not exist
+LINE 1: UPDATE boarding_passes
+               ^
+UPDATE 0
+ book_ref |                 payment_details
+----------+--------------------------------------------------
+ ABC123   | {"method": "credit_card", "status": "completed"}
+(1 row)
+
+ airport_code |                    facilities
+--------------+---------------------------------------------------
+ SVO          | {"lounges": 2, "parking": true, "restaurants": 5}
+(1 row)
+
+psql:allScripts.sql:554: ERROR:  relation "flights" does not exist
+LINE 2: FROM flights
+             ^
+psql:allScripts.sql:559: ERROR:  relation "boarding_passes" does not exist
+LINE 2: FROM boarding_passes
+             ^
+ aircraft_code | seat_no | seat_features
+---------------+---------+---------------
+(0 rows)
