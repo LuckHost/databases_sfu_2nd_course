@@ -17,7 +17,6 @@ LEFT JOIN
      FROM Personnel p JOIN Org_chart o ON p.emp_nbr = o.emp_nbr) b 
     ON o.boss_emp_nbr = b.emp_nbr;
 
--- 2. Представление "Иерархия подразделений" (Create_paths)
 CREATE OR REPLACE VIEW Create_paths AS
 WITH RECURSIVE org_hierarchy AS (
     SELECT 
@@ -25,7 +24,7 @@ WITH RECURSIVE org_hierarchy AS (
         boss_emp_nbr, 
         job_title, 
         1 AS level,
-        job_title AS path
+        job_title::TEXT AS path  -- Явное приведение типа к TEXT
     FROM Org_chart
     WHERE boss_emp_nbr IS NULL
     
@@ -36,7 +35,7 @@ WITH RECURSIVE org_hierarchy AS (
         o.boss_emp_nbr,
         o.job_title,
         h.level + 1,
-        h.path || ' -> ' || o.job_title
+        (h.path || ' -> ' || o.job_title)::TEXT  -- Явное приведение типа
     FROM Org_chart o
     JOIN org_hierarchy h ON o.boss_emp_nbr = h.emp_nbr
 )
