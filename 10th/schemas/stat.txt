@@ -1,0 +1,127 @@
+ table_name  | table_type |    column_name     |        data_type         | character_maximum_length | is_nullable |                column_default                | column_comment 
+-------------+------------+--------------------+--------------------------+--------------------------+-------------+----------------------------------------------+----------------
+ media       | BASE TABLE | media_id           | integer                  |                          | NO          | nextval('media_media_id_seq'::regclass)      | 
+ media       | BASE TABLE | note_id            | integer                  |                          | NO          |                                              | 
+ media       | BASE TABLE | user_id            | integer                  |                          | NO          |                                              | 
+ media       | BASE TABLE | type_id            | integer                  |                          | NO          |                                              | 
+ media       | BASE TABLE | position           | integer                  |                          | NO          |                                              | 
+ media       | BASE TABLE | original_filename  | character varying        |                      255 | NO          |                                              | 
+ media       | BASE TABLE | storage_path       | character varying        |                      512 | NO          |                                              | 
+ media       | BASE TABLE | file_size          | bigint                   |                          | NO          |                                              | 
+ media       | BASE TABLE | width              | integer                  |                          | YES         |                                              | 
+ media       | BASE TABLE | height             | integer                  |                          | YES         |                                              | 
+ media       | BASE TABLE | duration           | integer                  |                          | YES         |                                              | 
+ media       | BASE TABLE | uploaded_at        | timestamp with time zone |                          | YES         | CURRENT_TIMESTAMP                            | 
+ media_types | BASE TABLE | type_id            | integer                  |                          | NO          | nextval('media_types_type_id_seq'::regclass) | 
+ media_types | BASE TABLE | name               | character varying        |                       50 | NO          |                                              | 
+ media_types | BASE TABLE | description        | text                     |                          | YES         |                                              | 
+ media_types | BASE TABLE | allowed_extensions | ARRAY                    |                          | YES         | '{}'::character varying[]                    | 
+ note_tags   | BASE TABLE | tag_id             | integer                  |                          | NO          | nextval('note_tags_tag_id_seq'::regclass)    | 
+ note_tags   | BASE TABLE | note_id            | integer                  |                          | NO          |                                              | 
+ note_tags   | BASE TABLE | user_id            | integer                  |                          | NO          |                                              | 
+ note_tags   | BASE TABLE | tag_name           | character varying        |                       50 | NO          |                                              | 
+ note_tags   | BASE TABLE | color              | character varying        |                        7 | YES         |                                              | 
+ note_tags   | BASE TABLE | created_at         | timestamp with time zone |                          | YES         | CURRENT_TIMESTAMP                            | 
+ notes       | BASE TABLE | note_id            | integer                  |                          | NO          | nextval('notes_note_id_seq'::regclass)       | 
+ notes       | BASE TABLE | user_id            | integer                  |                          | NO          |                                              | 
+ notes       | BASE TABLE | title              | character varying        |                      100 | NO          |                                              | 
+ notes       | BASE TABLE | content            | text                     |                          | YES         |                                              | 
+ notes       | BASE TABLE | is_public          | boolean                  |                          | YES         | false                                        | 
+ notes       | BASE TABLE | created_at         | timestamp with time zone |                          | YES         | CURRENT_TIMESTAMP                            | 
+ notes       | BASE TABLE | updated_at         | timestamp with time zone |                          | YES         | CURRENT_TIMESTAMP                            | 
+ notes       | BASE TABLE | deleted_at         | timestamp with time zone |                          | YES         |                                              | 
+ users       | BASE TABLE | user_id            | integer                  |                          | NO          | nextval('users_user_id_seq'::regclass)       | 
+ users       | BASE TABLE | username           | character varying        |                       50 | NO          |                                              | 
+ users       | BASE TABLE | email              | character varying        |                      100 | NO          |                                              | 
+ users       | BASE TABLE | password_hash      | character varying        |                      255 | NO          |                                              | 
+ users       | BASE TABLE | created_at         | timestamp with time zone |                          | YES         | CURRENT_TIMESTAMP                            | 
+ users       | BASE TABLE | last_login         | timestamp with time zone |                          | YES         |                                              | 
+(36 rows)
+
+ table_name  | column_name | constraint_name  
+-------------+-------------+------------------
+ media       | media_id    | media_pkey
+ media_types | type_id     | media_types_pkey
+ note_tags   | tag_id      | note_tags_pkey
+ notes       | note_id     | notes_pkey
+ users       | user_id     | users_pkey
+(5 rows)
+
+ source_table | source_column | target_table | target_column |    constraint_name     | update_rule | delete_rule 
+--------------+---------------+--------------+---------------+------------------------+-------------+-------------
+ media        | note_id       | notes        | note_id       | media_note_id_fkey     | NO ACTION   | CASCADE
+ media        | type_id       | media_types  | type_id       | media_type_id_fkey     | NO ACTION   | NO ACTION
+ media        | user_id       | users        | user_id       | media_user_id_fkey     | NO ACTION   | CASCADE
+ note_tags    | note_id       | notes        | note_id       | note_tags_note_id_fkey | NO ACTION   | CASCADE
+ note_tags    | user_id       | users        | user_id       | note_tags_user_id_fkey | NO ACTION   | CASCADE
+ notes        | user_id       | users        | user_id       | notes_user_id_fkey     | NO ACTION   | CASCADE
+(6 rows)
+
+ table_name  |        index_name        | is_unique 
+-------------+--------------------------+-----------
+ media       | idx_media_note_id        | f
+ media       | idx_media_user_id        | f
+ media       | media_pkey               | t
+ media       | unique_position_per_note | t
+ media_types | media_types_name_key     | t
+ media_types | media_types_pkey         | t
+ note_tags   | idx_note_tags_note_id    | f
+ note_tags   | idx_note_tags_user_id    | f
+ note_tags   | note_tags_pkey           | t
+ note_tags   | unique_tag_per_note      | t
+ notes       | idx_notes_user_id        | f
+ notes       | notes_pkey               | t
+ users       | users_email_key          | t
+ users       | users_pkey               | t
+ users       | users_username_key       | t
+(15 rows)
+
+ table_name |          trigger_name           | action_timing | event_manipulation |              action_statement              
+------------+---------------------------------+---------------+--------------------+--------------------------------------------
+ media      | trigger_check_media_consistency | BEFORE        | INSERT             | EXECUTE FUNCTION check_media_consistency()
+ media      | trigger_check_media_consistency | BEFORE        | UPDATE             | EXECUTE FUNCTION check_media_consistency()
+ note_tags  | trigger_limit_note_tags         | BEFORE        | INSERT             | EXECUTE FUNCTION limit_note_tags()
+ notes      | trigger_update_note_timestamp   | BEFORE        | UPDATE             | EXECUTE FUNCTION update_note_timestamp()
+(4 rows)
+
+ schema |      function_name      | return_type | arguments | language | description 
+--------+-------------------------+-------------+-----------+----------+-------------
+ public | check_media_consistency | trigger     |           | plpgsql  | 
+ public | limit_note_tags         | trigger     |           | plpgsql  | 
+ public | update_note_timestamp   | trigger     |           | plpgsql  | 
+(3 rows)
+
+ table_name  |     constraint_name      | constraint_type | column_name | is_deferrable | initially_deferred 
+-------------+--------------------------+-----------------+-------------+---------------+--------------------
+ media       | 2200_19389_1_not_null    | CHECK           |             | NO            | NO
+ media       | 2200_19389_2_not_null    | CHECK           |             | NO            | NO
+ media       | 2200_19389_3_not_null    | CHECK           |             | NO            | NO
+ media       | 2200_19389_4_not_null    | CHECK           |             | NO            | NO
+ media       | 2200_19389_5_not_null    | CHECK           |             | NO            | NO
+ media       | 2200_19389_6_not_null    | CHECK           |             | NO            | NO
+ media       | 2200_19389_7_not_null    | CHECK           |             | NO            | NO
+ media       | 2200_19389_8_not_null    | CHECK           |             | NO            | NO
+ media       | media_file_size_check    | CHECK           | file_size   | NO            | NO
+ media       | media_position_check     | CHECK           | position    | NO            | NO
+ media       | unique_position_per_note | UNIQUE          | note_id     | NO            | NO
+ media       | unique_position_per_note | UNIQUE          | position    | NO            | NO
+ media_types | 2200_19377_1_not_null    | CHECK           |             | NO            | NO
+ media_types | 2200_19377_2_not_null    | CHECK           |             | NO            | NO
+ media_types | media_types_name_key     | UNIQUE          | name        | NO            | NO
+ note_tags   | 2200_19418_1_not_null    | CHECK           |             | NO            | NO
+ note_tags   | 2200_19418_2_not_null    | CHECK           |             | NO            | NO
+ note_tags   | 2200_19418_3_not_null    | CHECK           |             | NO            | NO
+ note_tags   | 2200_19418_4_not_null    | CHECK           |             | NO            | NO
+ note_tags   | unique_tag_per_note      | UNIQUE          | note_id     | NO            | NO
+ note_tags   | unique_tag_per_note      | UNIQUE          | tag_name    | NO            | NO
+ notes       | 2200_19360_1_not_null    | CHECK           |             | NO            | NO
+ notes       | 2200_19360_2_not_null    | CHECK           |             | NO            | NO
+ notes       | 2200_19360_3_not_null    | CHECK           |             | NO            | NO
+ users       | 2200_19348_1_not_null    | CHECK           |             | NO            | NO
+ users       | 2200_19348_2_not_null    | CHECK           |             | NO            | NO
+ users       | 2200_19348_3_not_null    | CHECK           |             | NO            | NO
+ users       | 2200_19348_4_not_null    | CHECK           |             | NO            | NO
+ users       | users_email_key          | UNIQUE          | email       | NO            | NO
+ users       | users_username_key       | UNIQUE          | username    | NO            | NO
+(30 rows)
+
