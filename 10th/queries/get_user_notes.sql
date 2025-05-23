@@ -1,4 +1,3 @@
--- Параметры: user_id, limit, offset
 SELECT 
     n.note_id,
     n.title,
@@ -14,10 +13,10 @@ LEFT JOIN
 LEFT JOIN 
     note_tags nt ON n.note_id = nt.note_id
 WHERE 
-    n.user_id = :user_id AND
+    n.user_id = 1 AND
     n.deleted_at IS NULL
 GROUP BY 
     n.note_id
 ORDER BY 
     n.updated_at DESC
-LIMIT :limit OFFSET :offset;
+LIMIT 10 OFFSET 0;

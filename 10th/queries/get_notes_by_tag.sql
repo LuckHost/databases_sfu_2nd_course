@@ -1,4 +1,3 @@
--- Параметры: user_id, tag_name
 SELECT 
     n.note_id,
     n.title,
@@ -12,9 +11,9 @@ LEFT JOIN
 JOIN 
     note_tags nt ON n.note_id = nt.note_id
 WHERE 
-    n.user_id = :user_id AND
+    n.user_id = 1 AND
     n.deleted_at IS NULL AND
-    nt.tag_name = :tag_name
+    nt.tag_name = 'важно'
 GROUP BY 
     n.note_id
 ORDER BY 

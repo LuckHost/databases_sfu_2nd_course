@@ -1,4 +1,3 @@
--- Параметр: note_id
 SELECT 
     n.*,
     u.username,
@@ -24,6 +23,6 @@ LEFT JOIN
 LEFT JOIN 
     note_tags nt ON n.note_id = nt.note_id
 WHERE 
-    n.note_id = :note_id
+    n.note_id = 1
 GROUP BY 
     n.note_id, u.user_id;

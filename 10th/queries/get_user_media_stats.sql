@@ -1,4 +1,3 @@
--- Параметр: user_id
 SELECT 
     mt.name AS media_type,
     COUNT(m.media_id) AS count,
@@ -9,7 +8,7 @@ FROM
 JOIN 
     media_types mt ON m.type_id = mt.type_id
 WHERE 
-    m.user_id = :user_id
+    m.user_id = 1
 GROUP BY 
     mt.name
 ORDER BY 
