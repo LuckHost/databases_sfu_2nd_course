@@ -1,23 +1,21 @@
--- Параметры: user_id, limit, offset
+-- Параметры: user_id, tag_name
 SELECT 
     n.note_id,
     n.title,
     LEFT(n.content, 100) AS preview,
-    n.created_at,
     n.updated_at,
-    COUNT(m.media_id) AS media_count,
-    ARRAY_AGG(DISTINCT nt.tag_name) AS tags
+    COUNT(m.media_id) AS media_count
 FROM 
     notes n
 LEFT JOIN 
     media m ON n.note_id = m.note_id
-LEFT JOIN 
+JOIN 
     note_tags nt ON n.note_id = nt.note_id
 WHERE 
     n.user_id = :user_id AND
-    n.deleted_at IS NULL
+    n.deleted_at IS NULL AND
+    nt.tag_name = :tag_name
 GROUP BY 
     n.note_id
 ORDER BY 
-    n.updated_at DESC
-LIMIT :limit OFFSET :offset;
+    n.updated_at DESC;
